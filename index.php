@@ -2,18 +2,13 @@
 
 use mvc\controller\controlador;
 use mvc\model\modelo;
+use config\dbconfig;
+include_once './config/autoloader.php';
 
 // Permitir solicitudes desde un origen específico
 header("Access-Control-Allow-Origin: http://127.0.0.1:5500");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
-
-// Definir la lista de usuarios (simulación de una base de datos)
-$users = [
-    ['id' => 1, 'name' => 'Juan', 'email' => 'juan@example.com'],
-    ['id' => 2, 'name' => 'María', 'email' => 'maria@example.com'],
-    ['id' => 3, 'name' => 'Pedro', 'email' => 'pedro@example.com']
-];
 
 // Obtener el método HTTP y la URL solicitada
 $method = $_SERVER['REQUEST_METHOD'];
@@ -21,15 +16,52 @@ $method = $_SERVER['REQUEST_METHOD'];
 $request = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
 // Tomar la segunda posicion de la URL $request[1]; se espera un ID
 
-spl_autoload_register(function($clase){
-    if (file_exists(str_replace( '\\', '/', $clase ).'.php')) {
-        require_once str_replace( '\\', '/', $clase ).'.php';
-    }
-});
 
-$modelo = new modelo();
-$controlador = new controlador(modelo:$modelo);
-$controlador->validarMetodo($method, $request, $users);
+$conexionDB = new dbconfig();
+
+$modelo = new modelo(conexionDB:$conexionDB);
+
+$controlador = new controlador(modeloIndex:$modelo);
+$controlador->validarMetodo($method, $request, $personajes = 'hola');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Manejar las solicitudes
