@@ -11,7 +11,7 @@ class controlador{
         $this->modelo = $modeloIndex;
     }
 
-    public function validarMetodo($metodo, $request, $personajes){
+    public function validarMetodo($metodo, $request){
         switch ($metodo){
             case 'GET':
                 $this->metodoGET($request);

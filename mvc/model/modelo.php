@@ -5,6 +5,8 @@ use PDO;
 use PDOException;
 use Exception;
 
+
+
 class modelo {
 
     private $conDB;
@@ -14,6 +16,7 @@ class modelo {
     }
 
     public function Personajes(){
+
         try {
 
             $consulta = "SELECT * FROM personajes";
@@ -27,7 +30,7 @@ class modelo {
             }
             
         } catch (PDOException $e) {
-            throw new Exception("ERROR EN LA CONSULTA: ".$e);
+            throw new Exception("ERROR EN LA CONSULTA: ".$e->getMessage());
         }
     }
     
@@ -38,11 +41,11 @@ class modelo {
     
             $stmt->bindParam(1, $personajeID, PDO::PARAM_INT);
             $stmt->execute();
-            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $resultado = $stmt->fetch();
             echo json_encode($resultado);
 
         } catch (PDOException $e) {
-            throw new Exception("ERROR EN LA CONSULTA: ".$e);
+            throw new Exception("ERROR EN LA CONSULTA: ".$e->getMessage());
             
         }
         
@@ -70,11 +73,10 @@ class modelo {
             $stmt->bindParam(6, $precio_personaje, PDO::PARAM_INT);
             $stmt->bindParam(7, $actualDate, PDO::PARAM_STR);
             $stmt->execute();
-            $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             echo json_encode(["INSERTADO"]);
         } catch (PDOException $e) {
-            throw new Exception("ERROR EN LA CONSULTA: ".$e);
+            throw new Exception("ERROR EN LA CONSULTA: ".$e->getMessage());
         }
     }
 
@@ -103,7 +105,7 @@ class modelo {
             $this->Personajes();
             
         } catch (PDOException $e) {
-            throw new Exception("ERROR EN LA CONSULTA".$e);
+            throw new Exception("ERROR EN LA CONSULTA".$e->getMessage());
             
         }
     }
@@ -118,7 +120,7 @@ class modelo {
             
             $this->Personajes();
         } catch (PDOException $e) {
-            throw new Exception("ERROR EN LA CONSULTA".$e);
+            throw new Exception("ERROR EN LA CONSULTA".$e->getMessage());
             
         }
     }
