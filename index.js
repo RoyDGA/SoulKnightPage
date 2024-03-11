@@ -8,11 +8,7 @@ function RecuperarDatos(event) {
 
     validarImagen(tipoDeImagen);
     for (const [key, value] of formulario.entries()) {
-        if (key=== 'imagenPersonaje') {
-            console.log(value);
-        }else{
-            console.log(`${key}: ${value}`);
-        }
+        console.log(`${key}: `, value);
     }
 }
 
@@ -34,7 +30,7 @@ async function crudAPI() {
         .then(respuesta => respuesta.json())
         .then(datos => {
             console.log('IMPRIMIR TODOS LOS OBJETOS DE USUARIOS👇');
-            for(let dato of datos) {
+            for(let dato of datos.personajes) {
                 console.log(dato)
             }
         });

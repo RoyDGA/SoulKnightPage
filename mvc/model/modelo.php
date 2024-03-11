@@ -26,7 +26,7 @@ class modelo {
             $tablaPersonajes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if ($tablaPersonajes) {
-                echo json_encode($tablaPersonajes);
+                echo json_encode(['personajes' => $tablaPersonajes]);
             }
             
         } catch (PDOException $e) {
