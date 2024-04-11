@@ -1,8 +1,6 @@
 <?php
 namespace mvc\controller;
-
 use mvc\model\modelo;
-
 class controlador{
 
     public $modelo;
@@ -42,8 +40,52 @@ class controlador{
     }
 
     public function metodoPOST(){
-        $datosBody = json_decode(file_get_contents('php://input'), true);
-        $this->modelo->nuevoPersonaje($datosBody);
+        if (isset($_POST['nombre'],$_POST['daño'],$_POST['vida'],$_POST['escudo'],$_POST['energia'],$_POST['precio'],$_FILES['imagen']['tmp_name']) &&
+        !empty(trim($_POST['nombre'])) && !empty(trim($_POST['vida'])) && !empty(trim($_POST['escudo'])) && !empty(trim($_POST['energia'])) && !empty(trim($_POST['precio'])) && !empty($_FILES['imagen']['tmp_name'])) {
+            
+            $nombre = $_POST['nombre'];
+            $daño = $_POST['daño'];
+            $vida = $_POST['vida'];
+            $escudo = $_POST['escudo'];
+            $energia = $_POST['energia'];
+            $precio = $_POST['precio'];
+            $imagen = $_FILES['imagen'];
+            
+            $datosPersonaje = [
+                "nombre" => htmlspecialchars($nombre),
+                "daño" => filter_var($daño, FILTER_SANITIZE_SPECIAL_CHARS),
+                "vida" => filter_var($vida, FILTER_VALIDATE_INT),
+                "escudo" => filter_var($escudo, FILTER_VALIDATE_INT),
+                "energia" => filter_var($energia, FILTER_VALIDATE_INT),
+                "precio" => filter_var($precio, FILTER_VALIDATE_INT),
+                "imagen" => $imagen,
+                "fecha" => date("Y-m-d")
+            ];
+            $this->validarImagen($imagen);
+            $this->modelo->nuevoPersonaje($datosPersonaje);
+        }
+        else{
+            echo json_encode(["mensaje" => "ALGUNOS DATOS NO FUERON ENVIADOS"]);
+        }
+    }
+
+    public function validarImagen($imagen){
+        $nameImg = $imagen['name'];
+        $tmpImg = $imagen['tmp_name'];
+        $tipoImg = $imagen['type'];
+        $pesoImg = $imagen['size'];
+        
+        $dir = "../ApiEjemplo/assets/";
+        $crearRuta = $dir . $nameImg;
+
+        $tipoPermitido = ["image/jpeg", "image/png", "image/jpg", "image/gif", "image/webp"];
+        if (in_array($tipoImg, $tipoPermitido)) {
+            move_uploaded_file($tmpImg, $crearRuta);
+            return [$nameImg, $pesoImg, $tmpImg, $tipoImg];
+        }
+        else{
+            echo json_encode(["mensaje" => "EL TIPO DE IMAGEN NO ES PERMITIDO"]);
+        }
     }
 
     public function metodoPUT($request){
@@ -59,5 +101,5 @@ class controlador{
             $id_personaje = intval($request[1]);
             $this->modelo->eliminarPersonaje($id_personaje);            
         }
-    }
+    }   
 }
